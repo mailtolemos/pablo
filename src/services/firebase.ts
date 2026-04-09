@@ -23,9 +23,7 @@ import { DEFAULT_NEWS_SOURCES } from './news';
 
 // ============================================================
 // FIREBASE CONFIGURATION
-// Replace these values with your own Firebase project config.
-// Go to https://console.firebase.google.com â your project â
-// Project Settings â General â Your apps â Firebase SDK snippet
+// Replace these values with your own Firebase project config
 // ============================================================
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
@@ -41,12 +39,8 @@ let auth: Auth | null = null;
 let db: Firestore | null = null;
 let isConfigured = false;
 
-// Check if Firebase is properly configured
 function checkConfig(): boolean {
-  if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-    return false;
-  }
-  return true;
+  return firebaseConfig.apiKey !== "YOUR_API_KEY";
 }
 
 export function initFirebase() {
@@ -54,7 +48,7 @@ export function initFirebase() {
 
   isConfigured = checkConfig();
   if (!isConfigured) {
-    console.warn('Firebase not configured. Running in demo mode. Update src/services/firebase.ts with your Firebase config.');
+    console.warn('[Pablo] Firebase not configured. Running in demo mode.');
     return { app: null, auth: null, db: null, isConfigured: false };
   }
 
@@ -64,33 +58,67 @@ export function initFirebase() {
   return { app, auth, db, isConfigured: true };
 }
 
-export function getFirebaseAuth(): Auth | null {
-  return auth;
-}
-
-export function getFirebaseDb(): Firestore | null {
-  return db;
-}
-
 export function isFirebaseConfigured(): boolean {
   return isConfigured;
 }
 
-// Auth methods
+// ============================================================
+// RATE LIMITING
+// ============================================================
+const rateLimits = new Map<string, { count: number; resetTime: number }>();
+
+function checkRateLimit(action: string, maxPerMinute: number = 10): boolean {
+  const now = Date.now();
+  const limit = rateLimits.get(action);
+
+  if (!limit || now > limit.resetTime) {
+    rateLimits.set(action, { count: 1, resetTime: now + 60000 });
+    return true;
+  }
+
+  if (limit.count >= maxPerMinute) {
+    return false;
+  }
+
+  limit.count++;
+  return true;
+}
+
+// ============================================================
+// AUTH METHODS
+// ============================================================
 const googleProvider = new GoogleAuthProvider();
 
 export async function signInWithGoogle() {
   if (!auth) throw new Error('Firebase not configured');
+  if (!checkRateLimit('auth', 5)) throw new Error('Too many attempts. Please wait a moment.');
   return signInWithPopup(auth, googleProvider);
 }
 
 export async function signInWithEmail(email: string, password: string) {
   if (!auth) throw new Error('Firebase not configured');
+  if (!checkRateLimit('auth', 5)) throw new Error('Too many attempts. Please wait a moment.');
+
+  // Input validation
+  if (!email || !password) throw new Error('Email and password are required');
+  if (email.length > 254) throw new Error('Invalid email address');
+  if (password.length > 128) throw new Error('Password too long');
+
   return signInWithEmailAndPassword(auth, email, password);
 }
 
 export async function signUpWithEmail(email: string, password: string) {
   if (!auth) throw new Error('Firebase not configured');
+  if (!checkRateLimit('auth', 3)) throw new Error('Too many attempts. Please wait a moment.');
+
+  // Input validation
+  if (!email || !password) throw new Error('Email and password are required');
+  if (email.length > 254) throw new Error('Invalid email address');
+  if (password.length < 8) throw new Error('Password must be at least 8 characters');
+  if (password.length > 128) throw new Error('Password too long');
+  if (!/[A-Z]/.test(password)) throw new Error('Password must contain an uppercase letter');
+  if (!/[0-9]/.test(password)) throw new Error('Password must contain a number');
+
   return createUserWithEmailAndPassword(auth, email, password);
 }
 
@@ -107,37 +135,75 @@ export function onAuthChange(callback: (user: User | null) => void) {
   return onAuthStateChanged(auth, callback);
 }
 
-// Preferences methods
+// ============================================================
+// PREFERENCES
+// ============================================================
 const DEFAULT_PREFS: UserPreferences = {
   favorites: [],
   newsSources: DEFAULT_NEWS_SOURCES,
-  defaultTab: 'all',
+  defaultTab: 'dashboard',
   refreshInterval: 60,
+  dashboardWidgets: [],
+  pinnedAssets: [],
 };
+
+// Sanitize preferences to prevent injection
+function sanitizePrefs(prefs: any): Partial<UserPreferences> {
+  const clean: Partial<UserPreferences> = {};
+
+  if (Array.isArray(prefs.favorites)) {
+    clean.favorites = prefs.favorites.filter((f: any) => typeof f === 'string' && f.length < 100).slice(0, 200);
+  }
+  if (Array.isArray(prefs.newsSources)) {
+    clean.newsSources = prefs.newsSources.filter((s: any) =>
+      typeof s.id === 'string' && typeof s.name === 'string' && typeof s.url === 'string'
+    ).slice(0, 50);
+  }
+  if (typeof prefs.defaultTab === 'string') {
+    clean.defaultTab = prefs.defaultTab;
+  }
+  if (typeof prefs.refreshInterval === 'number' && prefs.refreshInterval >= 10 && prefs.refreshInterval <= 600) {
+    clean.refreshInterval = prefs.refreshInterval;
+  }
+  if (Array.isArray(prefs.dashboardWidgets)) {
+    clean.dashboardWidgets = prefs.dashboardWidgets.slice(0, 20);
+  }
+  if (Array.isArray(prefs.pinnedAssets)) {
+    clean.pinnedAssets = prefs.pinnedAssets.filter((p: any) => typeof p === 'string').slice(0, 50);
+  }
+
+  return clean;
+}
 
 export async function getUserPreferences(userId: string): Promise<UserPreferences> {
   if (!db) return { ...DEFAULT_PREFS };
+  if (!checkRateLimit('prefs-read', 20)) return { ...DEFAULT_PREFS };
+
   try {
     const docRef = doc(db, 'users', userId);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return { ...DEFAULT_PREFS, ...docSnap.data() } as UserPreferences;
+      const data = sanitizePrefs(docSnap.data());
+      return { ...DEFAULT_PREFS, ...data };
     }
-    // Create default preferences
     await setDoc(docRef, DEFAULT_PREFS);
     return { ...DEFAULT_PREFS };
   } catch (err) {
-    console.error('Failed to get user preferences:', err);
+    console.error('[Pablo] Failed to get user preferences:', err);
     return { ...DEFAULT_PREFS };
   }
 }
 
 export async function saveUserPreferences(userId: string, prefs: Partial<UserPreferences>) {
   if (!db) return;
+  if (!checkRateLimit('prefs-write', 10)) return;
+
+  const sanitized = sanitizePrefs(prefs);
+
   try {
     const docRef = doc(db, 'users', userId);
-    await updateDoc(docRef, prefs).catch(() => setDoc(docRef, { ...DEFAULT_PREFS, ...prefs }));
+    await updateDoc(docRef, sanitized).catch(() => setDoc(docRef, { ...DEFAULT_PREFS, ...sanitized }));
   } catch (err) {
-    console.error('Failed to save user preferences:', err);
+    console.error('[Pablo] Failed to save user preferences:', err);
   }
 }
