@@ -1,0 +1,7 @@
+node_modules/
+dist/
+dist2/
+.env
+.env.local
+*.timestamp-*
+.DS_Store
