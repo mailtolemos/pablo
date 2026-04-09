@@ -24,8 +24,21 @@ export function Sparkline({ data, width = 80, height = 24, positive = true }: Sp
 
   const color = positive ? '#00D084' : '#ef4444';
 
+  // Create gradient fill
+  const fillPoints = `0,${height} ${points} ${width},${height}`;
+
   return (
     <svg width={width} height={height} className="sparkline-mini">
+      <defs>
+        <linearGradient id={`grad-${positive ? 'g' : 'r'}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.15" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <polygon
+        fill={`url(#grad-${positive ? 'g' : 'r'})`}
+        points={fillPoints}
+      />
       <polyline
         fill="none"
         stroke={color}
