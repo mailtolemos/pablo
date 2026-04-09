@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #222228 #0B0B0C;
+  }
+
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  *::-webkit-scrollbar-track {
+    background: #0B0B0C;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #222228;
+    border-radius: 3px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: #3a3a44;
+  }
+
+  body {
+    overflow: hidden;
+    background: #0B0B0C;
+  }
+
+  ::selection {
+    background: #00D08444;
+    color: #F5F5F5;
+  }
+}
+
+@layer components {
+  .terminal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+  }
+
+  .panel {
+    @apply bg-pablo-panel border border-pablo-border rounded-sm;
+  }
+
+  .panel-header {
+    @apply flex items-center justify-between px-3 py-2 border-b border-pablo-border text-xs text-pablo-text uppercase tracking-widest;
+  }
+
+  .glow-green {
+    text-shadow: 0 0 6px #00D08444, 0 0 12px #00D08422;
+  }
+
+  .glow-red {
+    text-shadow: 0 0 6px #8B000044, 0 0 12px #8B000022;
+  }
+
+  .scanline-overlay {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  }
+
+  .price-flash-green {
+    animation: flashGreen 0.5s ease-out;
+  }
+  .price-flash-red {
+    animation: flashRed 0.5s ease-out;
+  }
+
+  @keyframes flashGreen {
+    0% { background-color: #00D08422; }
+    100% { background-color: transparent; }
+  }
+  @keyframes flashRed {
+    0% { background-color: #8B000022; }
+    100% { background-color: transparent; }
+  }
+
+  .sparkline-mini {
+    filter: drop-shadow(0 0 2px #00D08444);
+  }
+
+  .ticker-scroll {
+    animation: tickerScroll 60s linear infinite;
+  }
+
+  @keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .btn-pablo {
+    @apply px-4 py-2 bg-pablo-green text-pablo-black font-mono font-semibold text-sm uppercase tracking-wider
+           hover:bg-opacity-90 transition-all duration-150 rounded-sm;
+  }
+
+  .btn-pablo-outline {
+    @apply px-4 py-2 border border-pablo-green text-pablo-green font-mono text-sm uppercase tracking-wider
+           hover:bg-pablo-green hover:text-pablo-black transition-all duration-150 rounded-sm;
+  }
+
+  .input-pablo {
+    @apply w-full bg-pablo-black border border-pablo-border px-3 py-2 text-pablo-light font-mono text-sm
+           focus:outline-none focus:border-pablo-green transition-colors rounded-sm placeholder-pablo-muted;
+  }
+}
