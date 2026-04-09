@@ -7,24 +7,24 @@ interface TabBarProps {
   counts: Record<TabId, number>;
 }
 
-const TABS: { id: TabId; label: string; icon: string }[] = [
-  { id: 'all', label: 'All Assets', icon: 'â' },
-  { id: 'favorites', label: 'Favorites', icon: 'â' },
-  { id: 'crypto', label: 'Crypto', icon: 'â¿' },
-  { id: 'stocks', label: 'Stocks', icon: '$' },
-  { id: 'indexes', label: 'Indexes', icon: 'â' },
-  { id: 'commodities', label: 'Commodities', icon: 'â¬¡' },
-  { id: 'news', label: 'Signal Feed', icon: 'ð¡' },
+const TABS: { id: TabId; label: string; shortLabel?: string }[] = [
+  { id: 'dashboard', label: 'My Terminal' },
+  { id: 'all', label: 'All Assets' },
+  { id: 'crypto', label: 'Crypto' },
+  { id: 'stocks', label: 'Stocks' },
+  { id: 'indexes', label: 'Indexes' },
+  { id: 'commodities', label: 'Commodities' },
+  { id: 'news', label: 'Signal Feed' },
 ];
 
 export function TabBar({ activeTab, onTabChange, counts }: TabBarProps) {
   const { user } = useAuth();
 
   return (
-    <div className="flex items-center gap-1 px-4 py-2 bg-pablo-dark border-b border-pablo-border overflow-x-auto">
-      {TABS.map(tab => {
-        // Only show favorites tab if logged in
-        if (tab.id === 'favorites' && !user) return null;
+    <div className="flex items-center bg-pablo-dark border-b border-pablo-border overflow-x-auto flex-shrink-0">
+      {TABS.map((tab, i) => {
+        // Only show dashboard tab if logged in
+        if (tab.id === 'dashboard' && !user) return null;
 
         const isActive = activeTab === tab.id;
         const count = counts[tab.id] ?? 0;
@@ -33,20 +33,16 @@ export function TabBar({ activeTab, onTabChange, counts }: TabBarProps) {
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider
-                        rounded-sm transition-all whitespace-nowrap ${
-              isActive
-                ? 'bg-pablo-green/10 text-pablo-green border border-pablo-green/30'
-                : 'text-pablo-muted hover:text-pablo-light hover:bg-pablo-border/20 border border-transparent'
-            }`}
+            className={`btn-tab ${isActive ? 'btn-tab-active' : ''} ${i === 0 ? 'ml-2' : ''}`}
           >
-            <span className="text-sm">{tab.icon}</span>
-            <span>{tab.label}</span>
-            {count > 0 && tab.id !== 'news' && (
-              <span className={`text-[9px] ${isActive ? 'text-pablo-green/70' : 'text-pablo-muted/50'}`}>
-                {count}
-              </span>
-            )}
+            <span className="flex items-center gap-1.5">
+              <span>{tab.label}</span>
+              {count > 0 && tab.id !== 'news' && tab.id !== 'dashboard' && (
+                <span className={`text-[8px] ${isActive ? 'text-pablo-green/60' : 'text-pablo-muted/40'}`}>
+                  {count}
+                </span>
+              )}
+            </span>
           </button>
         );
       })}
