@@ -52,7 +52,7 @@ export function LoginModal({ onClose }: LoginModalProps) {
             {isDemoMode ? '[ DEMO ACCESS ]' : '[ SECURE ACCESS ]'}
           </span>
           <button onClick={onClose} className="text-pablo-muted hover:text-pablo-light transition-colors">
-            â­
+            ✕
           </button>
         </div>
 
@@ -67,7 +67,7 @@ export function LoginModal({ onClose }: LoginModalProps) {
           {isDemoMode && (
             <div className="mb-4 p-3 bg-pablo-gold/10 border border-pablo-gold/20 rounded-sm">
               <p className="text-pablo-gold text-xs font-mono">
-                â¡ Demo mode â Firebase not configured. Preferences saved locally.
+                ⚡ Demo mode — Firebase not configured. Preferences saved locally.
               </p>
             </div>
           )}
@@ -102,7 +102,7 @@ export function LoginModal({ onClose }: LoginModalProps) {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="input-pablo"
-                placeholder="â¢â¢â¢â¢â¢â¢â¢â¢"
+                placeholder="••••••••"
                 required
                 minLength={6}
               />
@@ -161,5 +161,5 @@ export function LoginModal({ onClose }: LoginModalProps) {
         </div>
       </div>
     </div>
-  
-   4ÐïÐï½Ê
+  );
+}
