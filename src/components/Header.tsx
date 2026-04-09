@@ -26,7 +26,6 @@ export function Header({ global, lastUpdated }: HeaderProps) {
   return (
     <>
       <header className="border-b border-pablo-border bg-pablo-dark">
-        {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-2">
           <div className="flex items-center gap-4">
             <h1 className="font-serif text-xl tracking-[0.3em] text-pablo-light font-semibold">
@@ -69,7 +68,6 @@ export function Header({ global, lastUpdated }: HeaderProps) {
           </div>
         </div>
 
-        {/* Ticker bar */}
         {global && (
           <div className="border-t border-pablo-border px-4 py-1.5 flex items-center gap-6 text-[11px] font-mono overflow-hidden">
             <TickerItem label="TOTAL MCAP" value={formatNum(global.totalMarketCap)} change={global.marketCapChange24h} />
@@ -95,10 +93,32 @@ export function Header({ global, lastUpdated }: HeaderProps) {
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
     </>
-  
-  PßB[Ý[ÛXÚÙ\][JÂX[[YKÚ[ÙKYËYÐÛÛÜNÂX[Ý[ÎÂ[YNÝ[ÎÂÚ[ÙOÎ[X\ÂYÏÎÝ[ÎÂYÐÛÛÜÎÝ[ÎÂJHÂ]\
-]Û\ÜÓ[YOH^][\ËXÙ[\Ø\LÚ]\ÜXÙK[ÝÜ\Ü[Û\ÜÓ[YOH^\XË[]]Y\\Ø\ÙHXÚÚ[Ë]ÚY\ÛX[OÜÜ[Ü[Û\ÜÓ[YOH^\XË[YÚÝ[Y_OÜÜ[ØÚ[ÙHOOH[Y[Y	
-Ü[Û\ÜÓ[YO^ØÚ[ÙHHÈ	Ý^\XËYÜY[È	Ý^\YM	ßOØÚ[ÙHHÈ	ÊÉÈ	Éß^ØÚ[ÙKÑ^Y
-_IBÜÜ[
-_BÝYÈ	Ü[Û\ÜÓ[YO^Ø	ÝYÐÛÛÜ	Ý^\XË]^	ßXOÝYßOÜÜ[BÙ]
-NÂB
+  );
+}
+
+function TickerItem({
+  label,
+  value,
+  change,
+  tag,
+  tagColor,
+}: {
+  label: string;
+  value: string;
+  change?: number;
+  tag?: string;
+  tagColor?: string;
+}) {
+  return (
+    <div className="flex items-center gap-2 whitespace-nowrap">
+      <span className="text-pablo-muted uppercase tracking-wider">{label}</span>
+      <span className="text-pablo-light">{value}</span>
+      {change !== undefined && (
+        <span className={change >= 0 ? 'text-pablo-green' : 'text-red-400'}>
+          {change >= 0 ? '+' : ''}{change.toFixed(2)}%
+        </span>
+      )}
+      {tag && <span className={`${tagColor || 'text-pablo-text'}`}>{tag}</span>}
+    </div>
+  );
+}
