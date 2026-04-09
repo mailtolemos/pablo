@@ -29,14 +29,12 @@ export function AssetTable({ assets, title, showType = false }: AssetTableProps)
 
   const filtered = useMemo(() => {
     let result = assets;
-
     if (search) {
       const q = search.toLowerCase();
       result = result.filter(
         a => a.name.toLowerCase().includes(q) || a.symbol.toLowerCase().includes(q)
       );
     }
-
     result.sort((a, b) => {
       let valA: number, valB: number;
       switch (sortField) {
@@ -50,7 +48,6 @@ export function AssetTable({ assets, title, showType = false }: AssetTableProps)
       }
       return sortDir === 'asc' ? valA - valB : valB - valA;
     });
-
     return result;
   }, [assets, search, sortField, sortDir]);
 
@@ -62,7 +59,7 @@ export function AssetTable({ assets, title, showType = false }: AssetTableProps)
   };
 
   const formatLarge = (n: number | undefined) => {
-    if (!n) return 'â';
+    if (!n) return '—';
     if (n >= 1e12) return `$${(n / 1e12).toFixed(1)}T`;
     if (n >= 1e9) return `$${(n / 1e9).toFixed(1)}B`;
     if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
@@ -87,17 +84,16 @@ export function AssetTable({ assets, title, showType = false }: AssetTableProps)
       <span className="flex items-center gap-1">
         {children}
         {sortField === field && (
-          <span className="text-pablo-green">{sortDir === 'asc' ? 'â' : 'â'}</span>
+          <span className="text-pablo-green">{sortDir === 'asc' ? '↑' : '↓'}</span>
         )}
       </span>
     </th>
-  
-("»
+  );
 
   return (
     <div className="panel flex flex-col h-full">
       <div className="panel-header">
-        <span>{title} <span className="text-pablo-muted ml-2">[{{filtered.length}}]</span></span>
+        <span>{title} <span className="text-pablo-muted ml-2">[{filtered.length}]</span></span>
         <div className="flex items-center gap-2">
           <input
             type="text"
@@ -105,7 +101,7 @@ export function AssetTable({ assets, title, showType = false }: AssetTableProps)
             onChange={e => setSearch(e.target.value)}
             placeholder="Search..."
             className="bg-pablo-black border border-pablo-border px-2 py-1 text-[11px] text-pablo-light font-mono
-                      focus:outline-none focus:border-pablo-green transition-colors rounded-sm w-36 placeholder-pablo-muted"
+                       focus:outline-none focus:border-pablo-green transition-colors rounded-sm w-36 placeholder-pablo-muted"
           />
         </div>
       </div>
@@ -142,7 +138,7 @@ export function AssetTable({ assets, title, showType = false }: AssetTableProps)
                           isFav ? 'text-pablo-gold' : 'text-pablo-muted/30 group-hover:text-pablo-muted'
                         }`}
                       >
-                        {isFav ? 'â' : 'â'}
+                        {isFav ? '★' : '☆'}
                       </button>
                     </td>
                   )}
@@ -191,6 +187,5 @@ export function AssetTable({ assets, title, showType = false }: AssetTableProps)
         )}
       </div>
     </div>
-  
-+@);
+  );
 }
