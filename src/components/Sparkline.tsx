@@ -8,7 +8,6 @@ interface SparklineProps {
 export function Sparkline({ data, width = 80, height = 24, positive = true }: SparklineProps) {
   if (!data || data.length < 2) return null;
 
-  // Sample data if too many points
   const sampled = data.length > 30
     ? data.filter((_, i) => i % Math.ceil(data.length / 30) === 0)
     : data;
