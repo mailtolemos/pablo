@@ -4,24 +4,27 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         pablo: {
-          black: '#0B0B0C',
-          dark: '#111113',
-          panel: '#161619',
-          border: '#222228',
-          muted: '#3a3a44',
-          text: '#8a8a96',
-          light: '#F5F5F5',
-          green: '#00D084',
-          'green-dim': '#00D08422',
-          gold: '#C6A15B',
-          'gold-dim': '#C6A15B22',
-          red: '#8B0000',
-          'red-bright': '#ef4444',
-          'red-dim': '#8B000022',
+          black: 'var(--color-bg-primary)',
+          dark: 'var(--color-bg-secondary)',
+          panel: 'var(--color-bg-panel)',
+          'bg-input': 'var(--color-bg-input)',
+          border: 'var(--color-border)',
+          'border-subtle': 'var(--color-border-subtle)',
+          muted: 'var(--color-text-muted)',
+          text: 'var(--color-text-secondary)',
+          light: 'var(--color-text-primary)',
+          green: 'var(--color-accent-green)',
+          'green-dim': 'var(--color-accent-green-dim)',
+          gold: 'var(--color-accent-gold)',
+          'gold-dim': 'var(--color-accent-gold-dim)',
+          red: 'var(--color-accent-red)',
+          'red-bright': 'var(--color-accent-red-bright)',
+          'red-dim': 'var(--color-accent-red-dim)',
         }
       },
       fontFamily: {
@@ -44,8 +47,8 @@ export default {
           '100%': { transform: 'translateY(100%)' },
         },
         glow: {
-          '0%': { textShadow: '0 0 5px #00D08444, 0 0 10px #00D08422' },
-          '100%': { textShadow: '0 0 10px #00D08466, 0 0 20px #00D08433, 0 0 30px #00D08411' },
+          '0%': { textShadow: '0 0 5px var(--color-accent-green-glow-1), 0 0 10px var(--color-accent-green-glow-2)' },
+          '100%': { textShadow: '0 0 10px var(--color-accent-green-glow-3), 0 0 20px var(--color-accent-green-glow-4), 0 0 30px var(--color-accent-green-glow-5)' },
         },
         flicker: {
           '0%, 100%': { opacity: '1' },
