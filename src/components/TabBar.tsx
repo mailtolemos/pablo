@@ -33,13 +33,13 @@ export function TabBar({ activeTab, onTabChange, counts }: TabBarProps) {
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
-            className={`btn-tab ${isActive ? 'btn-tab-active' : ''} ${i === 0 ? 'ml-2' : ''}`}
+            className={`btn-tab ${isActive ? 'btn-tab-active' : ''} ${i === 0 ? 'ml-2' : ''} py-2 text-[12px]`}
           >
-            <span className="flex items-center gap-1.5">
+            <span className="flex items-center gap-2">
               <span>{tab.label}</span>
               {count > 0 && tab.id !== 'news' && tab.id !== 'dashboard' && (
-                <span className={`text-[8px] ${isActive ? 'text-pablo-green/60' : 'text-pablo-muted/40'}`}>
-                  {count}
+                <span className={`text-[10px] font-mono ${isActive ? 'text-pablo-green/70' : 'text-pablo-muted/50'}`}>
+                  ({count})
                 </span>
               )}
             </span>

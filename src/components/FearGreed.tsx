@@ -32,10 +32,10 @@ export function FearGreedWidget({ global }: FearGreedProps) {
         <span className="text-pablo-green animate-pulse text-[9px]">LIVE</span>
       </div>
 
-      <div className="panel-body p-3 space-y-3">
+      <div className="panel-body p-4 space-y-4">
         {/* Fear & Greed Gauge */}
         <div className="text-center">
-          <div className="text-pablo-muted text-[8px] uppercase tracking-[0.2em] mb-1">
+          <div className="text-pablo-muted text-[10px] uppercase tracking-[0.2em] mb-2">
             Fear & Greed Index
           </div>
           <div className="relative mx-auto" style={{ width: 140, height: 80 }}>
@@ -55,10 +55,10 @@ export function FearGreedWidget({ global }: FearGreedProps) {
               <circle cx="80" cy="80" r="3" fill={getColor(value)} />
             </svg>
           </div>
-          <div className="text-2xl font-bold font-mono" style={{ color: getColor(value) }}>
+          <div className="text-4xl font-bold font-mono mt-2" style={{ color: getColor(value) }}>
             {value}
           </div>
-          <div className="text-[10px] uppercase tracking-[0.15em]" style={{ color: getColor(value) }}>
+          <div className="text-[12px] uppercase tracking-[0.15em] mt-1" style={{ color: getColor(value) }}>
             {fearGreed.classification}
           </div>
         </div>
@@ -85,13 +85,13 @@ export function FearGreedWidget({ global }: FearGreedProps) {
 function DominanceBar({ label, value, color }: { label: string; value: number; color: string }) {
   return (
     <div>
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-pablo-muted text-[9px] uppercase tracking-[0.15em]">{label}</span>
-        <span className="text-pablo-light text-xs font-mono font-medium">{value.toFixed(1)}%</span>
+      <div className="flex justify-between items-center mb-1.5">
+        <span className="text-pablo-muted text-[10px] uppercase tracking-[0.15em]">{label}</span>
+        <span className="text-pablo-light text-[12px] font-mono font-medium">{value.toFixed(1)}%</span>
       </div>
-      <div className="w-full bg-pablo-border rounded-full h-1">
+      <div className="w-full bg-pablo-border rounded-full h-2">
         <div
-          className={`${color} h-1 rounded-full transition-all duration-500`}
+          className={`${color} h-2 rounded-full transition-all duration-500`}
           style={{ width: `${value}%` }}
         />
       </div>
@@ -101,12 +101,12 @@ function DominanceBar({ label, value, color }: { label: string; value: number; c
 
 function StatRow({ label, value, change }: { label: string; value: string; change?: number }) {
   return (
-    <div className="flex justify-between items-center">
-      <span className="text-pablo-muted text-[9px] uppercase tracking-[0.15em]">{label}</span>
+    <div className="flex justify-between items-center py-0.5">
+      <span className="text-pablo-muted text-[10px] uppercase tracking-[0.15em]">{label}</span>
       <div className="flex items-center gap-2">
-        <span className="text-pablo-light text-[11px] font-mono">{value}</span>
+        <span className="text-pablo-light text-[12px] font-mono font-medium">{value}</span>
         {change !== undefined && (
-          <span className={`text-[9px] font-mono ${change >= 0 ? 'text-pablo-green' : 'text-red-400'}`}>
+          <span className={`text-[10px] font-mono ${change >= 0 ? 'text-pablo-green' : 'text-red-400'}`}>
             {change >= 0 ? '+' : ''}{change.toFixed(2)}%
           </span>
         )}
@@ -129,9 +129,9 @@ export function FearGreedCompact({ global }: FearGreedProps) {
   const angle = (value / 100) * 180 - 90;
 
   return (
-    <div className="flex flex-col items-center justify-center p-2">
-      <div className="text-pablo-muted text-[8px] uppercase tracking-[0.2em] mb-1">Fear & Greed</div>
-      <div className="relative mx-auto" style={{ width: 100, height: 56 }}>
+    <div className="flex flex-col items-center justify-center p-3">
+      <div className="text-pablo-muted text-[10px] uppercase tracking-[0.2em] mb-2">Fear & Greed</div>
+      <div className="relative mx-auto" style={{ width: 110, height: 62 }}>
         <svg viewBox="0 0 160 90" className="w-full h-full">
           <path d="M 10 80 A 70 70 0 0 1 150 80" fill="none" stroke="#222228" strokeWidth="10" strokeLinecap="round" />
           <path d="M 10 80 A 70 70 0 0 1 36 30" fill="none" stroke="#ef4444" strokeWidth="10" strokeLinecap="round" />
@@ -146,8 +146,8 @@ export function FearGreedCompact({ global }: FearGreedProps) {
           <circle cx="80" cy="80" r="4" fill={getColor(value)} />
         </svg>
       </div>
-      <div className="text-xl font-bold font-mono mt-0.5" style={{ color: getColor(value) }}>{value}</div>
-      <div className="text-[9px] uppercase tracking-[0.12em]" style={{ color: getColor(value) }}>
+      <div className="text-2xl font-bold font-mono mt-1" style={{ color: getColor(value) }}>{value}</div>
+      <div className="text-[10px] uppercase tracking-[0.12em]" style={{ color: getColor(value) }}>
         {global.fearGreed.classification}
       </div>
     </div>

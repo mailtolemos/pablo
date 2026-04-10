@@ -74,18 +74,23 @@ export function AssetTable({ assets, title, showType = false, compact = false }:
     const colorMap: Record<AssetType, string> = {
       crypto: 'text-pablo-green', stock: 'text-blue-400', index: 'text-pablo-gold', commodity: 'text-orange-400',
     };
-    return <span className={`${colorMap[t]} text-[9px]`}>{map[t]}</span>;
+    return <span className={`${colorMap[t]} text-[11px]`}>{map[t]}</span>;
+  };
+
+  const RefBadge = ({ isLive }: { isLive: boolean }) => {
+    if (isLive) return null;
+    return <span className="text-pablo-muted text-[9px] border border-pablo-muted/40 px-1.5 rounded-sm ml-1">REF</span>;
   };
 
   const SortHeader = ({ field, children, className = '' }: { field: SortField; children: React.ReactNode; className?: string }) => (
     <th
-      className={`px-2 py-1.5 text-left cursor-pointer hover:text-pablo-light select-none transition-colors ${className}`}
+      className={`px-3 py-2 text-left cursor-pointer hover:text-pablo-light select-none transition-colors ${className}`}
       onClick={() => handleSort(field)}
     >
       <span className="flex items-center gap-1">
         {children}
         {sortField === field && (
-          <span className="text-pablo-green text-[9px]">{sortDir === 'asc' ? '\u2191' : '\u2193'}</span>
+          <span className="text-pablo-green text-[10px]">{sortDir === 'asc' ? '\u2191' : '\u2193'}</span>
         )}
       </span>
     </th>
@@ -102,24 +107,24 @@ export function AssetTable({ assets, title, showType = false, compact = false }:
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="search..."
-          className="bg-pablo-black border border-pablo-border px-2 py-0.5 text-[10px] text-pablo-light font-mono
-                     focus:outline-none focus:border-pablo-green/50 transition-colors w-28 placeholder-pablo-muted"
+          className="bg-pablo-black border border-pablo-border px-3 py-1.5 text-[11px] text-pablo-light font-mono
+                     focus:outline-none focus:border-pablo-green/50 transition-colors w-36 placeholder-pablo-muted"
         />
       </div>
 
       <div className="flex-1 overflow-auto">
-        <table className="w-full text-[11px] font-mono">
-          <thead className="text-pablo-muted uppercase tracking-wider sticky top-0 bg-pablo-panel z-10 text-[9px]">
+        <table className="w-full text-[12px] font-mono">
+          <thead className="text-pablo-muted uppercase tracking-wider sticky top-0 bg-pablo-panel z-10 text-[10px]">
             <tr className="border-b border-pablo-border">
-              {user && <th className="w-6 px-1 py-1.5"></th>}
+              {user && <th className="w-6 px-1 py-2"></th>}
               <SortHeader field="rank" className="w-8">#</SortHeader>
               <SortHeader field="name">Asset</SortHeader>
-              {showType && <th className="px-2 py-1.5 text-left">Type</th>}
+              {showType && <th className="px-3 py-2 text-left">Type</th>}
               <SortHeader field="price" className="text-right">Price</SortHeader>
               <SortHeader field="change" className="text-right">24h</SortHeader>
               {!compact && <SortHeader field="marketCap" className="text-right hidden lg:table-cell">MCap</SortHeader>}
               {!compact && <SortHeader field="volume" className="text-right hidden md:table-cell">Vol</SortHeader>}
-              {!compact && <th className="px-2 py-1.5 text-right hidden xl:table-cell w-20">7D</th>}
+              {!compact && <th className="px-3 py-2 text-right hidden xl:table-cell w-20">7D</th>}
             </tr>
           </thead>
           <tbody>
@@ -132,7 +137,7 @@ export function AssetTable({ assets, title, showType = false, compact = false }:
                   className="border-b border-pablo-border/30 hover:bg-pablo-green/5 transition-colors group"
                 >
                   {user && (
-                    <td className="px-1 py-1.5">
+                    <td className="px-1 py-2">
                       <button
                         onClick={() => toggleFavorite(asset.id)}
                         className={`text-xs transition-all ${
@@ -143,37 +148,40 @@ export function AssetTable({ assets, title, showType = false, compact = false }:
                       </button>
                     </td>
                   )}
-                  <td className="px-2 py-1.5 text-pablo-muted text-[10px]">{asset.rank ?? i + 1}</td>
-                  <td className="px-2 py-1.5">
-                    <div className="flex items-center gap-1.5">
+                  <td className="px-3 py-2 text-pablo-muted text-[11px]">{asset.rank ?? i + 1}</td>
+                  <td className="px-3 py-2">
+                    <div className="flex items-center gap-2">
                       {asset.image && (
-                        <img src={asset.image} alt="" className="w-4 h-4 rounded-full" loading="lazy" />
+                        <img src={asset.image} alt="" className="w-5 h-5 rounded-full" loading="lazy" />
                       )}
-                      <span className="text-pablo-light font-medium">{asset.symbol}</span>
-                      <span className="text-pablo-muted hidden sm:inline text-[10px]">{asset.name}</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-pablo-light font-medium">{asset.symbol}</span>
+                        {!asset.isLive && <RefBadge isLive={asset.isLive} />}
+                      </div>
+                      <span className="text-pablo-muted hidden sm:inline text-[11px]">{asset.name}</span>
                     </div>
                   </td>
-                  {showType && <td className="px-2 py-1.5">{typeLabel(asset.type)}</td>}
-                  <td className="px-2 py-1.5 text-right text-pablo-light tabular-nums">
+                  {showType && <td className="px-3 py-2">{typeLabel(asset.type)}</td>}
+                  <td className="px-3 py-2 text-right text-pablo-light tabular-nums text-[12px]">
                     {formatPrice(asset.price)}
                   </td>
-                  <td className={`px-2 py-1.5 text-right tabular-nums font-medium ${
+                  <td className={`px-3 py-2 text-right tabular-nums font-medium text-[12px] ${
                     isPositive ? 'text-pablo-green' : 'text-red-400'
                   }`}>
                     {isPositive ? '+' : ''}{asset.changePercent24h.toFixed(2)}%
                   </td>
                   {!compact && (
-                    <td className="px-2 py-1.5 text-right text-pablo-text tabular-nums hidden lg:table-cell text-[10px]">
+                    <td className="px-3 py-2 text-right text-pablo-text tabular-nums hidden lg:table-cell text-[11px]">
                       {formatLarge(asset.marketCap)}
                     </td>
                   )}
                   {!compact && (
-                    <td className="px-2 py-1.5 text-right text-pablo-text tabular-nums hidden md:table-cell text-[10px]">
+                    <td className="px-3 py-2 text-right text-pablo-text tabular-nums hidden md:table-cell text-[11px]">
                       {formatLarge(asset.volume24h)}
                     </td>
                   )}
                   {!compact && (
-                    <td className="px-2 py-1.5 text-right hidden xl:table-cell">
+                    <td className="px-3 py-2 text-right hidden xl:table-cell">
                       {asset.sparkline && asset.sparkline.length > 0 && (
                         <Sparkline data={asset.sparkline} positive={isPositive} width={70} height={20} />
                       )}
@@ -186,7 +194,7 @@ export function AssetTable({ assets, title, showType = false, compact = false }:
         </table>
 
         {filtered.length === 0 && (
-          <div className="flex items-center justify-center h-24 text-pablo-muted text-[10px] font-mono">
+          <div className="flex items-center justify-center h-24 text-pablo-muted text-[11px] font-mono">
             No assets found.
           </div>
         )}

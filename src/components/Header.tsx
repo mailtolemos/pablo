@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { LoginModal } from './LoginModal';
 import type { MarketGlobal } from '../types';
 
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 export function Header({ global, lastUpdated }: HeaderProps) {
   const { user, logout, isDemoMode } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [showLogin, setShowLogin] = useState(false);
 
   const userName = user
@@ -29,36 +31,44 @@ export function Header({ global, lastUpdated }: HeaderProps) {
               </h1>
             </div>
             <div className="hidden sm:flex items-center gap-2 ml-2 pl-3 border-l border-pablo-border">
-              <span className="text-pablo-muted text-[9px] tracking-[0.2em] uppercase">
+              <span className="text-pablo-muted text-[11px] tracking-[0.2em] uppercase">
                 All signal. No noise.
               </span>
             </div>
           </div>
 
-          {/* Right side: status + auth */}
+          {/* Right side: status + auth + theme */}
           <div className="flex items-center gap-4">
+            <button
+              onClick={toggleTheme}
+              className="text-pablo-muted hover:text-pablo-light transition-colors text-xs py-1 px-2 border border-pablo-border/50 hover:border-pablo-border rounded"
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+
             {lastUpdated && (
-              <span className="text-pablo-muted text-[9px] font-mono hidden md:inline tracking-wider">
+              <span className="text-pablo-muted text-[11px] font-mono hidden md:inline tracking-wider">
                 {lastUpdated.toLocaleTimeString()}
               </span>
             )}
 
             {user ? (
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-2 py-1 border border-pablo-border bg-pablo-black/50">
+                <div className="flex items-center gap-2 px-2 py-1.5 border border-pablo-border bg-pablo-black/50">
                   <div className="w-1.5 h-1.5 rounded-full bg-pablo-green" />
-                  <span className="text-pablo-text text-[10px] font-mono uppercase tracking-wider">
+                  <span className="text-pablo-text text-[11px] font-mono uppercase tracking-wider">
                     {userName}
                   </span>
                   {isDemoMode && (
-                    <span className="text-pablo-gold text-[8px] border border-pablo-gold/30 px-1 rounded-sm">
+                    <span className="text-pablo-gold text-[11px] border border-pablo-gold/30 px-1 rounded-sm">
                       DEMO
                     </span>
                   )}
                 </div>
                 <button
                   onClick={logout}
-                  className="text-pablo-muted text-[10px] font-mono hover:text-red-400 transition-colors uppercase tracking-wider"
+                  className="text-pablo-muted text-[11px] font-mono hover:text-red-400 transition-colors uppercase tracking-wider"
                 >
                   [logout]
                 </button>
@@ -66,7 +76,7 @@ export function Header({ global, lastUpdated }: HeaderProps) {
             ) : (
               <button
                 onClick={() => setShowLogin(true)}
-                className="btn-pablo-outline text-[10px] py-1 px-3"
+                className="btn-pablo-outline text-[11px] py-1.5 px-3"
               >
                 [access]
               </button>
@@ -110,11 +120,11 @@ function TickerBar({ global }: { global: MarketGlobal }) {
   ];
 
   return (
-    <div className="border-t border-pablo-border px-4 py-1 flex items-center gap-4 text-[10px] font-mono overflow-x-auto bg-pablo-black/30">
+    <div className="border-t border-pablo-border px-4 py-2 flex items-center gap-4 text-[11px] font-mono overflow-x-auto bg-pablo-black/30">
       {items.map((item, i) => (
-        <div key={i} className="flex items-center gap-1.5 whitespace-nowrap">
-          <span className="text-pablo-muted uppercase tracking-wider">{item.label}</span>
-          <span className="text-pablo-light">{item.value}</span>
+        <div key={i} className="flex items-center gap-2 whitespace-nowrap">
+          <span className="text-pablo-muted uppercase tracking-wider text-[10px]">{item.label}</span>
+          <span className="text-pablo-light font-semibold">{item.value}</span>
           {item.change !== undefined && (
             <span className={item.change >= 0 ? 'text-pablo-green' : 'text-red-400'}>
               {item.change >= 0 ? '+' : ''}{item.change.toFixed(2)}%

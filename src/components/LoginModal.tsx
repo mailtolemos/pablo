@@ -97,38 +97,38 @@ export function LoginModal({ onClose }: LoginModalProps) {
           </button>
         </div>
 
-        <div className="p-5">
-          <h2 className="font-serif text-xl tracking-[0.2em] text-center mb-0.5 text-pablo-light">
+        <div className="p-6">
+          <h2 className="font-serif text-2xl tracking-[0.2em] text-center mb-1 text-pablo-light">
             PABLO
           </h2>
-          <p className="text-pablo-muted text-[9px] text-center mb-5 tracking-[0.2em] uppercase">
+          <p className="text-pablo-muted text-[11px] text-center mb-6 tracking-[0.2em] uppercase">
             {mode === 'login' ? 'Access your terminal' : 'Join the network'}
           </p>
 
           {isDemoMode && (
-            <div className="mb-3 p-2 bg-pablo-gold/5 border border-pablo-gold/20">
-              <p className="text-pablo-gold text-[10px] font-mono">
+            <div className="mb-4 p-3 bg-pablo-gold/5 border border-pablo-gold/20">
+              <p className="text-pablo-gold text-[11px] font-mono">
                 Demo mode -- preferences saved locally
               </p>
             </div>
           )}
 
           {error && (
-            <div className="mb-3 p-2 bg-red-900/10 border border-red-800/20">
-              <p className="text-red-400 text-[10px] font-mono">{error}</p>
+            <div className="mb-4 p-3 bg-red-900/10 border border-red-800/20">
+              <p className="text-red-400 text-[11px] font-mono">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="text-pablo-muted text-[9px] uppercase tracking-[0.15em] block mb-1">
+              <label className="text-pablo-muted text-[10px] uppercase tracking-[0.15em] block mb-2">
                 Email
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="input-pablo text-xs"
+                className="input-pablo text-[12px] py-2 px-3"
                 placeholder="trader@pablo.io"
                 required
                 autoComplete="email"
@@ -136,21 +136,21 @@ export function LoginModal({ onClose }: LoginModalProps) {
             </div>
 
             <div>
-              <label className="text-pablo-muted text-[9px] uppercase tracking-[0.15em] block mb-1">
+              <label className="text-pablo-muted text-[10px] uppercase tracking-[0.15em] block mb-2">
                 Password
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="input-pablo text-xs"
+                className="input-pablo text-[12px] py-2 px-3"
                 placeholder={'\u2022'.repeat(12)}
                 required
                 minLength={mode === 'signup' ? 8 : 1}
                 autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
               />
               {mode === 'signup' && (
-                <p className="text-pablo-muted text-[9px] mt-1">
+                <p className="text-pablo-muted text-[10px] mt-1.5">
                   Min 8 chars, 1 uppercase, 1 number
                 </p>
               )}
@@ -158,14 +158,14 @@ export function LoginModal({ onClose }: LoginModalProps) {
 
             {mode === 'signup' && (
               <div>
-                <label className="text-pablo-muted text-[9px] uppercase tracking-[0.15em] block mb-1">
+                <label className="text-pablo-muted text-[10px] uppercase tracking-[0.15em] block mb-2">
                   Confirm Password
                 </label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={e => setConfirmPassword(e.target.value)}
-                  className="input-pablo text-xs"
+                  className="input-pablo text-[12px] py-2 px-3"
                   placeholder={'\u2022'.repeat(12)}
                   required
                   autoComplete="new-password"
@@ -184,9 +184,9 @@ export function LoginModal({ onClose }: LoginModalProps) {
 
           {!isDemoMode && (
             <>
-              <div className="flex items-center gap-3 my-4">
+              <div className="flex items-center gap-3 my-5">
                 <div className="flex-1 h-px bg-pablo-border" />
-                <span className="text-pablo-muted text-[9px] uppercase tracking-[0.15em]">or</span>
+                <span className="text-pablo-muted text-[10px] uppercase tracking-[0.15em]">or</span>
                 <div className="flex-1 h-px bg-pablo-border" />
               </div>
 
@@ -206,18 +206,18 @@ export function LoginModal({ onClose }: LoginModalProps) {
             </>
           )}
 
-          <p className="text-center mt-4 text-pablo-muted text-[10px]">
+          <p className="text-center mt-5 text-pablo-muted text-[11px]">
             {mode === 'login' ? (
               <>
                 New here?{' '}
-                <button onClick={() => { setMode('signup'); setError(''); }} className="text-pablo-green hover:underline">
+                <button onClick={() => { setMode('signup'); setError(''); }} className="text-pablo-green hover:underline font-semibold">
                   Create account
                 </button>
               </>
             ) : (
               <>
                 Have an account?{' '}
-                <button onClick={() => { setMode('login'); setError(''); }} className="text-pablo-green hover:underline">
+                <button onClick={() => { setMode('login'); setError(''); }} className="text-pablo-green hover:underline font-semibold">
                   Sign in
                 </button>
               </>

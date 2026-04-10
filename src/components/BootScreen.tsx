@@ -14,12 +14,12 @@ const BOOT_LINES = [
   { text: '> Establishing signal feed...', delay: 900 },
   { text: '> Loading dashboard modules...', delay: 1050 },
   { text: '', delay: 1200 },
-  { text: '  ████████╗  ██████╗ █████████╗ ██╗      ██████╗', delay: 1300 },
-  { text: '  ██╔═══██╗██╔═══██╗██╔═════╝██╗     ██╔═════██╗', delay: 1340 },
-  { text: '  ██████████╝██████████╗██████████╗██║     ██║   ██║', delay: 1380 },
-  { text: '  ██╔════╩╝ ██╔════██║██╔════██║     ██║   ██║', delay: 1420 },
-  { text: '  ██║     ██║  ██║██████████╗██████████╗╚██████████╝', delay: 1460 },
-  { text: '  ╚═╝     ╚═╝  ╚═╝╚════════════╩════════════╝ ╚════════╩═╝', delay: 1500 },
+  { text: '  ██████╗  █████╗ ██████╗ ██╗      ██████╗', delay: 1300 },
+  { text: '  ██╔══██╗██╔══██╗██╔══██╗██║     ██╔═══██╗', delay: 1340 },
+  { text: '  ██████╔╝███████║██████╔╝██║     ██║   ██║', delay: 1380 },
+  { text: '  ██╔═══╝ ██╔══██║██╔══██╗██║     ██║   ██║', delay: 1420 },
+  { text: '  ██║     ██║  ██║██████╔╝███████╗╚██████╔╝', delay: 1460 },
+  { text: '  ╚═╝     ╚═╝  ╚═╝╚═════╝ ╚══════╝ ╚═════╝', delay: 1500 },
   { text: '', delay: 1600 },
   { text: '  All signal. No noise.', delay: 1700 },
   { text: '', delay: 1900 },
@@ -47,8 +47,8 @@ export function BootScreen({ onComplete }: BootScreenProps) {
 
   return (
     <div className="fixed inset-0 bg-pablo-black z-[100] flex items-center justify-center">
-      <div className="crt-vignette" />
-      <div className="scanline-overlay" />
+      <div className="crt-vignette dark:opacity-40 opacity-0" />
+      <div className="scanline-overlay dark:opacity-100 opacity-0" />
       <div className="w-full max-w-2xl px-8">
         <div className="font-mono text-sm leading-relaxed">
           {BOOT_LINES.slice(0, visibleLines).map((line, i) => (
@@ -56,13 +56,13 @@ export function BootScreen({ onComplete }: BootScreenProps) {
               key={i}
               className={`${
                 line.text.startsWith('>') ? 'text-pablo-green' :
-                line.text.includes('█') ? 'text-pablo-green glow-green' :
+                line.text.includes('\u2588') ? 'text-pablo-green glow-green' :
                 line.text.includes('All signal') ? 'text-pablo-gold text-center' :
                 'text-pablo-muted'
               }`}
               style={{ animation: 'fadeIn 0.2s ease-out' }}
             >
-              {line.text || ' '}
+              {line.text || '\u00A0'}
             </div>
           ))}
           <span className="inline-block w-2 h-4 bg-pablo-green ml-0.5" style={{ animation: 'flicker 0.5s infinite' }} />
