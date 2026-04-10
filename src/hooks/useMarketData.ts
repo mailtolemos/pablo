@@ -14,7 +14,7 @@ interface MarketDataState {
   error: string | null;
 }
 
-export function useMarketData(refreshInterval = 60000) {
+export function useMarketData(refreshInterval = 120000) {
   const [state, setState] = useState<MarketDataState>({
     crypto: [],
     stocks: [],
@@ -30,7 +30,7 @@ export function useMarketData(refreshInterval = 60000) {
 
   const fetchAll = useCallback(async () => {
     try {
-      // Fetch crypto from API, stocks/indexes/commodities from local data
+      // Fetch crypto from API, stocks/indexes/commodities from static local data
       const [cryptoPage1, cryptoPage2, globalData] = await Promise.all([
         fetchCryptoAssets(1, 100),
         fetchCryptoAssets(2, 100),
@@ -61,32 +61,19 @@ export function useMarketData(refreshInterval = 60000) {
     }
   }, []);
 
-  // Refresh stocks/indexes/commodities more frequently (simulated live data)
-  const refreshTraditional = useCallback(() => {
-    setState(prev => ({
-      ...prev,
-      stocks: fetchStocks(),
-      indexes: fetchIndexes(),
-      commodities: fetchCommodities(),
-      lastUpdated: new Date(),
-    }));
-  }, []);
-
   useEffect(() => {
     fetchAll();
 
-    // Refresh crypto every refreshInterval (default 60s to respect rate limits)
+    // Refresh crypto data on interval (default 120s = 2 minutes to respect API rate limits)
+    // Stocks/indexes/commodities are static reference data and only fetched once on mount
     const cryptoInterval = window.setInterval(fetchAll, refreshInterval);
-    // Refresh traditional markets every 5 seconds (local data, no API calls)
-    const tradInterval = window.setInterval(refreshTraditional, 5000);
 
     intervalRef.current = cryptoInterval;
 
     return () => {
       clearInterval(cryptoInterval);
-      clearInterval(tradInterval);
     };
-  }, [fetchAll, refreshTraditional, refreshInterval]);
+  }, [fetchAll, refreshInterval]);
 
   const allAssets = [...state.crypto, ...state.stocks, ...state.indexes, ...state.commodities];
 
