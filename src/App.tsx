@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { useMarketData } from './hooks/useMarketData';
 import { useNews } from './hooks/useNews';
 import { Header } from './components/Header';
@@ -17,7 +18,7 @@ function Dashboard() {
   const [booted, setBooted] = useState(false);
 
   const { crypto, stocks, indexes, commodities, allAssets, global, isLoading, lastUpdated } =
-    useMarketData(preferences.refreshInterval * 1000);
+    useMarketData((preferences.refreshInterval || 120) * 1000);
 
   const { news, isLoading: newsLoading, lastFetched, refresh: refreshNews } =
     useNews(preferences.newsSources, 120000);
@@ -51,8 +52,8 @@ function Dashboard() {
 
   return (
     <div className="terminal-shell">
-      <div className="scanline-overlay" />
-      <div className="crt-vignette" />
+      <div className="scanline-overlay dark:opacity-100 opacity-0" />
+      <div className="crt-vignette dark:opacity-40 opacity-0" />
 
       <Header global={global} lastUpdated={lastUpdated} />
       <TabBar activeTab={activeTab} onTabChange={handleTabChange} counts={counts} />
@@ -141,16 +142,17 @@ function Dashboard() {
           <span className="flex items-center gap-1.5">
             <span className={`status-dot ${global ? 'status-dot-live' : 'status-dot-offline'}`} />
             <span className={global ? 'text-pablo-green' : 'text-red-400'}>
-              {global ? 'CONNECTED' : 'CONNECTING'}
+              {global ? 'LIVE' : 'CONNECTING'}
             </span>
           </span>
           <span className="text-pablo-border">|</span>
           <span>ASSETS: {allAssets.length}</span>
+          {!global && <span className="text-pablo-muted text-[10px] italic">[reference data]</span>}
         </div>
         <div className="flex items-center gap-3">
           <span>SOURCES: {preferences.newsSources.filter(s => s.enabled).length}</span>
           <span className="text-pablo-border">|</span>
-          <span>REFRESH: {preferences.refreshInterval}s</span>
+          <span>REFRESH: {preferences.refreshInterval || 120}s</span>
           <span className="text-pablo-border">|</span>
           <span>{new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</span>
         </div>
@@ -161,8 +163,10 @@ function Dashboard() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Dashboard />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Dashboard />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
